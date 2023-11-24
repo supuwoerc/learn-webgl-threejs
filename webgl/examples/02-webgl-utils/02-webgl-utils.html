@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>02-webgl-utils</title>
+</head>
+
+<body onload="init()">
+    <canvas id="canvas" height="400" width="400"></canvas>
+</body>
+<script src="../../resources/lib/webgl-utils.js"></script>
+<script src="../../resources/lib/webgl-debug.js"></script>
+<script src="../../resources/lib/cuon-utils.js"></script>
+<script>
+    function init() {
+        const canvas = document.getElementById("canvas")
+        const gl = getWebGLContext(canvas)
+        if (!gl) {
+            alert("浏览器不支持webgl")
+        } else {
+            // WebGLRenderingContext.clearColor() 方法用于设置清除颜色缓冲区时使用的颜色值
+            gl.clearColor(0, 0, 0, 1)
+            // 输出当前颜色缓冲区清除值的副本
+            console.log(gl.getParameter(gl.COLOR_CLEAR_VALUE));
+            gl.clear(gl.COLOR_BUFFER_BIT)
+        }
+    }
+</script>
+
+</html>
