@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>03-initShaders</title>
+</head>
+<body onload="init()">
+<canvas id="canvas" height="400" width="400"></canvas>
+</body>
+<script src="../../resources/lib/webgl-utils.js"></script>
+<script src="../../resources/lib/webgl-debug.js"></script>
+<script src="../../resources/lib/cuon-utils.js"></script>
+<script>
+    // 顶点着色器程序
+    var VSHADER_SOURCE =
+        'void main() {\n' +
+        '  gl_Position = vec4(0.5, 0.5, 0.0, 1.0);\n' + //设置顶点的位置，必须设置
+        '  gl_PointSize = 10.0;\n' +                    // 设置顶点的大小，可以不设置，默认为1.0(float类型，改为10就会渲染失败)
+        '}\n';
+    // 片元着色器程序
+    var FSHADER_SOURCE =
+        'void main() {\n' +
+        '  gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n' + // 设置顶点的颜色
+        '}\n';
+
+    function init() {
+        const canvas = document.getElementById("canvas")
+        const gl = getWebGLContext(canvas)
+        if (!gl) {
+            alert("浏览器不支持webgl")
+        } else {
+            if (!initShaders(gl, VSHADER_SOURCE, FSHADER_SOURCE)) {
+                console.log('Failed to intialize shaders.');
+            } else {
+                // 设置清空画布的颜色缓冲区颜色值
+                gl.clearColor(0.0, 0.0, 0.0, 1.0);
+                // 清空画布
+                gl.clear(gl.COLOR_BUFFER_BIT);
+                // 绘制一个点
+                gl.drawArrays(gl.POINTS, 0, 1);  //顶点着色器将被执行1次
+            }
+        }
+    }
+</script>
+</html>
