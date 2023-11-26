@@ -5,7 +5,8 @@
 
 ```javascript
 gl.getAttribLocation(program, "attribute_name");
-gl.getUniformLocation(program, "uniform_name")
+// 当uniform_name不存在的时候，getUniformLocation将返回null而不是-1
+gl.getUniformLocation(program, "uniform_name"); 
 ``` 
 
 ```javascript

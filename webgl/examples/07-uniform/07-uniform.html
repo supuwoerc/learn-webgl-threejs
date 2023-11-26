@@ -43,7 +43,8 @@
                 const a_Position = gl.getAttribLocation(gl.program, "a_Position")
                 const a_PointSize = gl.getAttribLocation(gl.program, "a_PointSize")
                 const u_FragColor = gl.getUniformLocation(gl.program, "u_FragColor")
-                if (a_Position < 0 || a_PointSize < 0 || u_FragColor < 0) {
+                // getUniformLocation当变量名不存在的时候将返回null
+                if (a_Position < 0 || a_PointSize < 0 || u_FragColor === null) {
                     console.log("未发现attribute变量或者uniform变量", a_Position, a_PointSize, u_FragColor)
                 } else {
                     // 传入顶点大小到aa_PointSize
