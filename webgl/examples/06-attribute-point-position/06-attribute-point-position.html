@@ -8,7 +8,7 @@
     <title>06-attribute-point-position</title>
 </head>
 <body onload="init()">
-<canvas id="canvas" height="400" width="400"></canvas>
+<canvas id="canvas" height="200" width="400"></canvas>
 </body>
 <script src="../../resources/lib/webgl-utils.js"></script>
 <script src="../../resources/lib/webgl-debug.js"></script>
@@ -54,9 +54,10 @@
                     // 声明canvas点击事件回调函数
                     function clickHandle(ev, canvas, gl, a_Position) {
                         const rect = canvas.getBoundingClientRect();
-                        const x = ((ev.clientX - rect.left) - canvas.height / 2) / (canvas.height / 2);
-                        const y = (canvas.width / 2 - (ev.clientY - rect.top)) / (canvas.width / 2);
+                        const x = ((ev.clientX - rect.left) - canvas.width / 2) / (canvas.width / 2);
+                        const y = (canvas.height / 2 - (ev.clientY - rect.top)) / (canvas.height / 2);
                         gl_points.push([x, y])
+                        console.log(x,y)
                         gl.clear(gl.COLOR_BUFFER_BIT);
                         gl_points.forEach(([x, y]) => {
                             gl.vertexAttrib3f(a_Position, x, y, 0.0)
