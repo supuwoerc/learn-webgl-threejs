@@ -16,7 +16,7 @@
 <script>
     // 顶点着色器程序
     var VSHADER_SOURCE =
-        'attribute vec4 a_Position;\n' +  // 全局声明a_Position
+        'attribute vec4 a_Position;\n' +  // 声明a_Position
         'void main() {\n' +
         '  gl_Position = a_Position;\n' +               // 设置顶点的位置，必须设置，由全局变量a_Position赋值
         '  gl_PointSize = 10.0;\n' +                    // 设置顶点的大小，可以不设置，默认为1.0(float类型，改为10就会渲染失败)
