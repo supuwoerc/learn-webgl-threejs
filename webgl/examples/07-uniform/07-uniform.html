@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>07-uniform</title>
+</head>
+<body onload="init()">
+<canvas id="canvas" height="400" width="400"></canvas>
+</body>
+<script src="../../resources/lib/webgl-utils.js"></script>
+<script src="../../resources/lib/webgl-debug.js"></script>
+<script src="../../resources/lib/cuon-utils.js"></script>
+<script>
+    // 顶点着色器程序
+    var VSHADER_SOURCE =
+        'attribute vec4 a_Position;\n' +  // 全局声明a_Position
+        'attribute float a_PointSize;\n' +  // 全局声明a_PointSize
+        'void main() {\n' +
+        '  gl_Position = a_Position;\n' +               // 设置顶点的位置，必须设置，由全局变量a_Position赋值
+        '  gl_PointSize = a_PointSize;\n' +             // 设置顶点的大小，可以不设置，默认为1.0(float类型，改为10就会渲染失败)
+        '}\n';
+    // 片元着色器程序
+    var FSHADER_SOURCE =
+        'precision mediump float;\n' +   // 指定变量的范围和精度
+        'uniform vec4 u_FragColor;\n' +  // 声明u_FragColor
+        'void main() {\n' +
+        '  gl_FragColor = u_FragColor;\n' + // 设置顶点的颜色
+        '}\n';
+
+    function init() {
+        const canvas = document.getElementById("canvas")
+        const gl = getWebGLContext(canvas)
+        if (!gl) {
+            alert("浏览器不支持webgl")
+        } else {
+            if (!initShaders(gl, VSHADER_SOURCE, FSHADER_SOURCE)) {
+                console.log('Failed to initialize shaders.');
+            } else {
+                // 获取a_Position对应存储地址
+                const a_Position = gl.getAttribLocation(gl.program, "a_Position")
+                const a_PointSize = gl.getAttribLocation(gl.program, "a_PointSize")
+                const u_FragColor = gl.getUniformLocation(gl.program, "u_FragColor")
+                if (a_Position < 0 || a_PointSize < 0 || u_FragColor < 0) {
+                    console.log("未发现attribute变量或者uniform变量", a_Position, a_PointSize, u_FragColor)
+                } else {
+                    // 传入顶点大小到aa_PointSize
+                    gl.vertexAttrib1f(a_PointSize, 10.0)
+                    // 设置清空画布的颜色缓冲区颜色值
+                    gl.clearColor(0.0, 0.0, 0.0, 1.0);
+                    // 清空画布
+                    gl.clear(gl.COLOR_BUFFER_BIT);
+                    const gl_points = []
+
+                    // 声明canvas点击事件回调函数
+                    function clickHandle(ev, canvas, gl, a_Position) {
+                        const rect = canvas.getBoundingClientRect();
+                        const x = ((ev.clientX - rect.left) - canvas.width / 2) / (canvas.width / 2);
+                        const y = (canvas.height / 2 - (ev.clientY - rect.top)) / (canvas.height / 2);
+                        let color = [1.0, 0.0, 0.0, 1.0] // 第一象限
+                        if (x < 0 && y > 0) {
+                            color = [0.0, 1.0, 0.0, 1.0] // 第二象限
+                        }
+                        if (x < 0 && y < 0) {
+                            color = [0.0, 0.0, 1.0, 1.0] // 第三象限
+                        }
+                        if (x > 0 && y < 0) {
+                            color = [1.0, 1.0, 1.0, 1.0] // 第四象限
+                        }
+                        gl_points.push({
+                            position: [x, y],
+                            color: color
+                        })
+                        gl.clear(gl.COLOR_BUFFER_BIT);
+                        gl_points.forEach(({position, color}) => {
+                            const [x, y] = position
+                            gl.vertexAttrib3f(a_Position, x, y, 0.0)
+                            gl.uniform4f(u_FragColor, ...color)
+                            gl.drawArrays(gl.POINTS, 0, 1)
+                        })
+                    }
+
+                    // 画布添加事件
+                    canvas.addEventListener("click", (ev) => {
+                        clickHandle(ev, canvas, gl, a_Position)
+                    })
+                }
+
+            }
+        }
+    }
+</script>
+</html>
