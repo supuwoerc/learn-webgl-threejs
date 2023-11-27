@@ -1,7 +1,6 @@
 ## 方法说明
 
 * 只有顶点着色器才能使用`attribute`属性，片元着色器只能使用uniform变量或者varying变量
-* 
 
 ```javascript
 gl.getAttribLocation(program, "attribute_name");
