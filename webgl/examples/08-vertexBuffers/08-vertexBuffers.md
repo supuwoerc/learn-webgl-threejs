@@ -22,7 +22,7 @@
         gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW)
         // 将缓冲区对象分配给attribute，设置顶点属性指针
         gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 0, 0)
-        // 启用顶点属性
+        // 启用指定索引的顶点属性
         gl.enableVertexAttribArray(a_Position)
         // 返回坐标点个数
         return vertices.length / 2
