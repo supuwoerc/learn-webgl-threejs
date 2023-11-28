@@ -6,7 +6,7 @@
     <meta name="viewport"
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>14-drawArrays-TRIANGLE_FAN</title>
+    <title>15-quad</title>
 </head>
 
 <body onload="init()">
@@ -34,7 +34,7 @@
     function initVertexBuffers(gl, a_Position) {
         // 设置顶点坐标
         const vertices = new Float32Array([
-            0.5, 0.5, -0.5, 0.5, 0.0, -0.5, 0.5, -0.5
+            -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5
         ])
         // 创建缓冲区对象
         const vertexBuffers = gl.createBuffer()
@@ -79,7 +79,7 @@
                     gl.clearColor(0.0, 0.0, 0.0, 1.0);
                     // 清空画布
                     gl.clear(gl.COLOR_BUFFER_BIT);
-                    gl.drawArrays(gl.TRIANGLE_FAN, 0, verticesLen)
+                    gl.drawArrays(gl.TRIANGLE_STRIP, 0, verticesLen)
                 }
 
             }
