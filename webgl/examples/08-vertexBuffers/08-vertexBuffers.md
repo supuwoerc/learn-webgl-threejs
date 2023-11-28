@@ -2,7 +2,7 @@
 
 * `WebGLRenderingContext.bindBuffer()` 方法将给定的 WebGLBuffer 绑定到目标。
 * `WebGLRenderingContext.bufferData()` 方法创建并初始化了 Buffer 对象的数据存储区。
-* `WebGLRenderingContext.vertexAttribPointer()` 方法绑定当前缓冲区范围到gl.ARRAY_BUFFER,成为当前顶点缓冲区对象的通用顶点属性并指定它的布局 (缓冲区对象中的偏移量)。
+* `WebGLRenderingContext.vertexAttribPointer()` 方法将绑定到gl.ARRAY_BUFFER的缓冲区对象分配到参数1指定的attribute变量
 
 ```javascript
     function initVertexBuffers(gl, a_Position) {
