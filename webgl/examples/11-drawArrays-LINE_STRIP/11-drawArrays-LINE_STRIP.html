@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>11-drawArrays-LINE_STRIP</title>
+</head>
+
+<body onload="init()">
+    <canvas id="canvas" height="400" width="400"></canvas>
+</body>
+<script src="../../resources/lib/webgl-utils.js"></script>
+<script src="../../resources/lib/webgl-debug.js"></script>
+<script src="../../resources/lib/cuon-utils.js"></script>
+<script>
+    // 顶点着色器程序
+    var VSHADER_SOURCE =
+        'attribute vec4 a_Position;\n' +  // 声明a_Position
+        'void main() {\n' +
+        '  gl_Position = a_Position;\n' + // 设置顶点的位置，必须设置，由全局变量a_Position赋值
+        '}\n';
+    // 片元着色器程序
+    var FSHADER_SOURCE =
+        'precision mediump float;\n' +   // 指定变量的范围和精度
+        'uniform vec4 u_FragColor;\n' +  // 声明u_FragColor
+        'void main() {\n' +
+        '  gl_FragColor = u_FragColor;\n' + // 设置顶点的颜色
+        '}\n';
+
+
+    function initVertexBuffers(gl, a_Position) {
+        // 设置顶点坐标
+        const vertices = new Float32Array([
+            0.5, 0.5, -0.5, 0.5, 0.0, -0.5, 0.5, -0.5
+        ])
+        // 创建缓冲区对象
+        const vertexBuffers = gl.createBuffer()
+        if (!vertexBuffers) {
+            console.log("createBuffer创建缓冲区对象失败")
+            return -1
+        }
+        // 绑定缓冲区对象
+        gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffers)
+        // 写入数据到缓冲区对象
+        gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW)
+        // 设置顶点属性指针
+        gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 0, 0)
+        // 启用顶点属性
+        gl.enableVertexAttribArray(a_Position)
+        // 返回坐标点个数
+        return vertices.length / 2
+    }
+
+
+    function init() {
+        const canvas = document.getElementById("canvas")
+        const gl = getWebGLContext(canvas)
+        if (!gl) {
+            alert("浏览器不支持webgl")
+        } else {
+            if (!initShaders(gl, VSHADER_SOURCE, FSHADER_SOURCE)) {
+                console.log('Failed to initialize shaders.');
+            } else {
+                // 获取a_Position对应存储地址
+                const a_Position = gl.getAttribLocation(gl.program, "a_Position")
+                const u_FragColor = gl.getUniformLocation(gl.program, "u_FragColor")
+                const verticesLen = initVertexBuffers(gl, a_Position)
+                if (verticesLen < 0) {
+                    console.log("initVertexBuffers失败", n)
+                } else if (a_Position < 0 || u_FragColor === null) {
+                    console.log("未发现attribute变量或者uniform变量", a_Position, u_FragColor)
+                } else {
+                    // 设置uniform变量作为片元着色器颜色
+                    gl.uniform4f(u_FragColor, 1.0, 1.0, 1.0, 1.0)
+                    // 设置清空画布的颜色缓冲区颜色值
+                    gl.clearColor(0.0, 0.0, 0.0, 1.0);
+                    // 清空画布
+                    gl.clear(gl.COLOR_BUFFER_BIT);
+                    gl.drawArrays(gl.LINE_STRIP, 0, verticesLen)
+                }
+
+            }
+        }
+    }
+</script>
+
+</html>
