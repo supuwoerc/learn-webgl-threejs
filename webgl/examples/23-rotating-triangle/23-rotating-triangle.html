@@ -11,6 +11,7 @@
 
 <body onload="init()">
 <canvas id="canvas" height="400" width="400"></canvas>
+<button id="toggle">播放/暂停动画</button>
 </body>
 <script src="../../resources/lib/webgl-utils.js"></script>
 <script src="../../resources/lib/webgl-debug.js"></script>
@@ -86,11 +87,12 @@
 
 
     let gl, u_xformMatrix, u_FragColor, verticesLen, matrix
+    frameId = null
 
     // 开启动画
     function animate() {
         draw(gl, u_xformMatrix, u_FragColor, verticesLen, matrix, getAngle())
-        requestAnimationFrame(animate)
+        frameId = requestAnimationFrame(animate)
     }
 
     function init() {
@@ -116,13 +118,31 @@
                     u_FragColor = color
                     verticesLen = len
                     matrix = new Matrix4()
-                    // 开始动画
-                    animate()
+                    draw(gl, u_xformMatrix, u_FragColor, verticesLen, matrix, getAngle())
+                    initEvent()
                 }
 
             }
         }
     }
+
+    isRotating = false
+
+    function toggleAnimation() {
+        if (frameId === null) {
+            latestTime = Date.now()
+            animate()
+        } else {
+            cancelAnimationFrame(frameId)
+            frameId = null
+        }
+    }
+
+    function initEvent() {
+        const toggle = document.getElementById("toggle")
+        toggle.addEventListener("click", toggleAnimation)
+    }
+
 </script>
 
 </html>
