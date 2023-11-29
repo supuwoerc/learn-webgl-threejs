@@ -71,7 +71,7 @@
                 const u_Translation = gl.getUniformLocation(gl.program, "u_Translation")
                 const verticesLen = initVertexBuffers(gl, a_Position)
                 if (verticesLen < 0) {
-                    console.log("initVertexBuffers失败", n)
+                    console.log("initVertexBuffers失败", verticesLen)
                 } else if (a_Position < 0 || u_FragColor === null || u_Translation === null) {
                     console.log("未发现attribute变量或者uniform变量", a_Position, u_FragColor, u_Translation)
                 } else {

@@ -75,7 +75,7 @@
                 const u_CosB = gl.getUniformLocation(gl.program, "u_CosB")
                 const verticesLen = initVertexBuffers(gl, a_Position)
                 if (verticesLen < 0) {
-                    console.log("initVertexBuffers失败", n)
+                    console.log("initVertexBuffers失败", verticesLen)
                 } else if (a_Position < 0 || u_FragColor === null || u_SinB === null || u_CosB === null) {
                     console.log("未发现attribute变量或者uniform变量", a_Position, u_FragColor, u_SinB, u_CosB)
                 } else {
