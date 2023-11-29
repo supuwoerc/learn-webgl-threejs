@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>25-multiple-attribute-point-size</title>
+</head>
+<body onload="init()">
+<canvas id="canvas" height="400" width="400"></canvas>
+</body>
+<script src="../../resources/lib/webgl-utils.js"></script>
+<script src="../../resources/lib/webgl-debug.js"></script>
+<script src="../../resources/lib/cuon-utils.js"></script>
+<script>
+    // 顶点着色器程序
+    var VSHADER_SOURCE =
+        'attribute vec4 a_Position;\n' +  // 声明a_Position
+        'attribute float a_PointSize;\n' +  // 声明a_PointSize
+        'void main() {\n' +
+        '  gl_Position = a_Position;\n' +               // 设置顶点的位置，必须设置，由全局变量a_Position赋值
+        '  gl_PointSize = a_PointSize;\n' +             // 设置顶点的大小，可以不设置，默认为1.0(float类型，改为10就会渲染失败)
+        '}\n';
+    // 片元着色器程序
+    var FSHADER_SOURCE =
+        'void main() {\n' +
+        '  gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n' + // 设置顶点的颜色
+        '}\n';
+
+    // 创建和设置缓冲区对象
+    function initVertexBuffers(gl, a_Position, a_PointSize) {
+        // 设置顶点坐标
+        const vertices = new Float32Array([
+            0.3, 0.3, -0.3, 0.3, 0.0, -0.3
+        ])
+
+        const vertexBuffers = gl.createBuffer()
+        if (!vertexBuffers) {
+            console.log("创建缓冲区对象失败")
+            return -1
+        }
+        // 绑定缓冲区对象
+        gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffers)
+        // 写入缓冲区对象数据
+        gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW)
+        // 分配缓冲区对象到zttribute
+        gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 0, 0)
+        // 启用attribute
+        gl.enableVertexAttribArray(a_Position)
+        /*----------------------------------*/
+        // 设置顶点大小
+        const verticesSize = new Float32Array([
+            10.0, 20.0, 30.0
+        ])
+        const sizeBuffers = gl.createBuffer()
+        if (!sizeBuffers) {
+            console.log("创建缓冲区对象失败")
+            return -1
+        }
+        // 绑定缓冲区对象
+        gl.bindBuffer(gl.ARRAY_BUFFER, sizeBuffers)
+        // 写入数据到缓冲区
+        gl.bufferData(gl.ARRAY_BUFFER, verticesSize, gl.STATIC_DRAW)
+        // 分配缓冲区对象到attribute
+        gl.vertexAttribPointer(a_PointSize, 1, gl.FLOAT, false, 0, 0)
+        // 启用attribute
+        gl.enableVertexAttribArray(a_PointSize)
+        // 解绑gl.ARRAY_BUFFER
+        gl.bindBuffer(gl.ARRAY_BUFFER,null)
+        return vertices.length / 2
+    }
+
+    function init() {
+        const canvas = document.getElementById("canvas")
+        const gl = getWebGLContext(canvas)
+        if (!gl) {
+            alert("浏览器不支持webgl")
+        } else {
+            if (!initShaders(gl, VSHADER_SOURCE, FSHADER_SOURCE)) {
+                console.log('Failed to initialize shaders.');
+            } else {
+                // 获取a_Position对应存储地址
+                const a_Position = gl.getAttribLocation(gl.program, "a_Position")
+                const a_PointSize = gl.getAttribLocation(gl.program, "a_PointSize")
+                const len = initVertexBuffers(gl, a_Position, a_PointSize)
+                if (len < 0) {
+                    console.log("initVertexBuffers失败", len)
+                } else if (a_Position < 0 || a_PointSize < 0) {
+                    console.log("未发现attribute变量", a_Position, a_PointSize)
+                } else {
+                    // 设置清空画布的颜色缓冲区颜色值
+                    gl.clearColor(0.0, 0.0, 0.0, 1.0);
+                    // 清空画布
+                    gl.clear(gl.COLOR_BUFFER_BIT);
+                    // 绘制一个点
+                    gl.drawArrays(gl.POINTS, 0, len);  //顶点着色器将被执行1次
+                }
+
+            }
+        }
+    }
+</script>
+</html>
