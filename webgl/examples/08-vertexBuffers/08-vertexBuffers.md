@@ -20,7 +20,7 @@
         gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffers)
         // 写入数据到缓冲区对象
         gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW)
-        // 将缓冲区对象分配给attribute，分配缓冲区对象到zttribute
+        // 将缓冲区对象分配给attribute，分配缓冲区对象到attribute
         gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 0, 0)
         // 启用指定索引的顶点属性
         gl.enableVertexAttribArray(a_Position)
@@ -42,10 +42,10 @@
 
 5. 使用 `gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW)` 将顶点数据写入到顶点缓冲区对象中。`gl.STATIC_DRAW` 表示数据不会频繁修改。
 
-6. 使用 `gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 0, 0)` 分配缓冲区对象到zttribute。其中，`a_Position` 是指向顶点着色器中顶点位置属性的指针，`2` 表示每个顶点有两个分量，`gl.FLOAT` 表示每个分量的数据类型为浮点数，`false` 表示不需要进行归一化处理，`0` 表示相邻顶点数据的字节间隔，`0` 表示从缓冲区的开头开始。
+6. 使用 `gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 0, 0)` 分配缓冲区对象到attribute。其中，`a_Position` 是指向顶点着色器中顶点位置属性的指针，`2` 表示每个顶点有两个分量，`gl.FLOAT` 表示每个分量的数据类型为浮点数，`false` 表示不需要进行归一化处理，`0` 表示相邻顶点数据的字节间隔，`0` 表示从缓冲区的开头开始。
 
 7. 使用 `gl.enableVertexAttribArray(a_Position)` 开启attribute。
 
 8. 最后，返回顶点坐标点的个数，即 `vertices.length / 2`，因为每个顶点由两个坐标值组成。
 
-综上所述，这个方法的作用是将顶点坐标数据存储到顶点缓冲区对象中，并分配缓冲区对象到zttribute，最后返回顶点坐标点的个数。这样可以在绘制过程中使用这些顶点数据进行渲染。
+综上所述，这个方法的作用是将顶点坐标数据存储到顶点缓冲区对象中，并分配缓冲区对象到attribute，最后返回顶点坐标点的个数。这样可以在绘制过程中使用这些顶点数据进行渲染。

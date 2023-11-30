@@ -27,7 +27,7 @@
         gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffers)
         // 写入缓冲区对象数据
         gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW)
-        // 分配缓冲区对象到zttribute
+        // 分配缓冲区对象到attribute
         gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 0, 0)
         // 启用attribute
         gl.enableVertexAttribArray(a_Position)
