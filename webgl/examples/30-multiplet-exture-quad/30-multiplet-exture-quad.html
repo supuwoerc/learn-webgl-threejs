@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>30-multiplet-exture-quad</title>
+</head>
+
+<body onload="main()">
+<canvas id="canvas" height="400" width="400"></canvas>
+</body>
+<script src="../../resources/lib/webgl-utils.js"></script>
+<script src="../../resources/lib/webgl-debug.js"></script>
+<script src="../../resources/lib/cuon-utils.js"></script>
+<script>
+    // 顶点着色器，创建v_TexCoord传递给片元着色器v_TexCoord
+    const VSHADER_SOURCE = "" +
+        "attribute vec4 a_Position;\n" +
+        "attribute vec2 a_TexCoord;\n" +
+        "varying vec2 v_TexCoord;\n" +
+        "void main(){\n" +
+        "   gl_Position = a_Position;\n" +
+        "   v_TexCoord = a_TexCoord;\n" +
+        "}\n";
+
+    // 片元着色器，从顶点着色器获取v_TexCoord纹理坐标
+    const FSHADER_SOURCE = "" +
+        "precision mediump float;\n" +
+        "uniform sampler2D u_Sampler0;\n" +
+        "uniform sampler2D u_Sampler1;\n" +
+        "varying vec2 v_TexCoord;\n" +
+        "void main(){\n" +
+        "   vec4 color0 = texture2D(u_Sampler0,v_TexCoord);\n" +
+        "   vec4 color1 = texture2D(u_Sampler1,v_TexCoord);\n" +
+        "   gl_FragColor = color0 * color1;\n" +
+        "}\n";
+
+    // 初始化顶点缓冲区对象
+    function initVertexBuffers(gl) {
+        // [顶点坐标x,顶点坐标y,纹理坐标x,纹理坐标y]
+        const verticesTexCoords = new Float32Array([
+            // Vertex coordinates, texture coordinate
+            -0.5, 0.5, 0.0, 1.0,
+            -0.5, -0.5, 0.0, 0.0,
+            0.5, 0.5, 1.0, 1.0,
+            0.5, -0.5, 1.0, 0.0,
+        ]);
+        const vertexTexCoordBuffer = gl.createBuffer()
+        if (!vertexTexCoordBuffer) {
+            console.log("缓冲区对象创建失败")
+            return -1
+        }
+        gl.bindBuffer(gl.ARRAY_BUFFER, vertexTexCoordBuffer)
+        gl.bufferData(gl.ARRAY_BUFFER, verticesTexCoords, gl.STATIC_DRAW)
+        const FSIZE = verticesTexCoords.BYTES_PER_ELEMENT
+        // 绑定顶点坐标数据到a_Position
+        const a_Position = gl.getAttribLocation(gl.program, "a_Position")
+        if (a_Position < 0) {
+            console.log("未发现attribute：a_Position")
+            return -1
+        }
+        gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, FSIZE * 4, 0)
+        gl.enableVertexAttribArray(a_Position)
+        // 绑定纹理坐标数据到a_TexCoord
+        const a_TexCoord = gl.getAttribLocation(gl.program, "a_TexCoord")
+        if (a_TexCoord < 0) {
+            console.log("未发现attribute：a_TexCoord")
+            return -1
+        }
+        gl.vertexAttribPointer(a_TexCoord, 2, gl.FLOAT, false, FSIZE * 4, FSIZE * 2)
+        gl.enableVertexAttribArray(a_TexCoord)
+        return verticesTexCoords.length / 4
+    }
+
+    // 初始化纹理配置
+    function initTextures(gl, verticesLen) {
+        const texture0 = gl.createTexture()
+        const texture1 = gl.createTexture()
+        if (!texture0 || !texture1) {
+            console.log("创建纹理对象失败")
+            return false
+        }
+        const u_Sampler0 = gl.getUniformLocation(gl.program, "u_Sampler0")
+        const u_Sampler1 = gl.getUniformLocation(gl.program, "u_Sampler1")
+        if (!u_Sampler0) {
+            console.log("未发现uniform变量:u_Sampler0")
+            return false
+        }
+        if (!u_Sampler1) {
+            console.log("未发现uniform变量:u_Sampler1")
+            return false
+        }
+        const image0 = new Image()
+        const image1 = new Image()
+        image0.onload = function () {
+            loadTexture(gl, verticesLen, texture0, u_Sampler0, image0, 0)
+        }
+        image1.onload = function () {
+            loadTexture(gl, verticesLen, texture1, u_Sampler1, image1, 1)
+        }
+        image0.src = "../../resources/images/sky.jpeg"
+        image1.src = "../../resources/images/circle.gif"
+        return true
+    }
+
+    let g_texUnit0 = false
+    let g_texUnit1 = false
+
+    // 加载纹理
+    function loadTexture(gl, verticesLen, texture, u_Sampler, image, textureIndex) {
+        // 反转Y轴
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
+        // 开启纹理单元
+        if (textureIndex == 0) {
+            gl.activeTexture(gl.TEXTURE0);
+            g_texUnit0 = true;
+        } else {
+            gl.activeTexture(gl.TEXTURE1);
+            g_texUnit1 = true;
+        }
+        // 绑定纹理对象到目标target上
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        // 设置纹理参数
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        // 设置纹理图像
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+        // 将纹理单元传递到u_Sampler
+        gl.uniform1i(u_Sampler, textureIndex);
+        // 清理画布并绘制
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        if (g_texUnit0 && g_texUnit1) {
+            gl.drawArrays(gl.TRIANGLE_STRIP, 0, verticesLen);
+        }
+    }
+
+    function main() {
+        const canvas = document.getElementById("canvas")
+        const gl = getWebGLContext(canvas)
+        if (!gl) {
+            console.log("浏览器不支持webgl")
+        } else {
+            if (!initShaders(gl, VSHADER_SOURCE, FSHADER_SOURCE)) {
+                console.log("初始化着色器失败")
+            } else {
+                gl.clearColor(0.0, 0.0, 0.0, 1.0)
+                const verticesLen = initVertexBuffers(gl)
+                if (verticesLen < 0) {
+                    console.log("顶点缓冲区对象创建失败")
+                } else {
+                    initTextures(gl, verticesLen)
+                }
+            }
+        }
+    }
+</script>
+
+</html>

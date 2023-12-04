@@ -6,7 +6,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>28-texture-quad</title>
+    <title>29-texture-quad</title>
 </head>
 
 <body onload="main()">
@@ -40,10 +40,10 @@
         // [顶点坐标x,顶点坐标y,纹理坐标x,纹理坐标y]
         const verticesTexCoords = new Float32Array([
             // Vertex coordinates, texture coordinate
-            -0.5,  0.5,   0.0, 1.0,
-            -0.5, -0.5,   0.0, 0.0,
-            0.5,  0.5,   1.0, 1.0,
-            0.5, -0.5,   1.0, 0.0,
+            -0.5, 0.5, 0.0, 1.0,
+            -0.5, -0.5, 0.0, 0.0,
+            0.5, 0.5, 1.0, 1.0,
+            0.5, -0.5, 1.0, 0.0,
         ]);
         const vertexTexCoordBuffer = gl.createBuffer()
         if (!vertexTexCoordBuffer) {
