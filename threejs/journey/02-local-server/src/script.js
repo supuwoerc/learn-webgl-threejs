@@ -1,39 +1,26 @@
-import * as THREE from 'three'
-
-// Canvas
-const canvas = document.querySelector('canvas.webgl')
-
-// Scene
-const scene = new THREE.Scene()
-
-/**
- * Object
- */
-const geometry = new THREE.BoxGeometry(1, 1, 1)
-const material = new THREE.MeshBasicMaterial({ color: 0xff0000 })
-const mesh = new THREE.Mesh(geometry, material)
-scene.add(mesh)
-
-/**
- * Sizes
- */
+import * as THREE from "three";
+// 定义画布大小
 const sizes = {
-    width: 800,
-    height: 600
-}
-
-/**
- * Camera
- */
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height)
-camera.position.z = 3
-scene.add(camera)
-
-/**
- * Renderer
- */
+  width: 800,
+  height: 600,
+};
+const { width, height } = sizes;
+// 创建场景
+const scene = new THREE.Scene();
+// 创建蓝色立方体
+const geometry = new THREE.BoxGeometry();
+const material = new THREE.MeshBasicMaterial({
+  color: "blue",
+});
+const mesh = new THREE.Mesh(geometry, material);
+scene.add(mesh);
+// 创建照相机
+const camera = new THREE.PerspectiveCamera(75, width / height);
+camera.position.z = 3;
+scene.add(camera);
+// 创建渲染器
 const renderer = new THREE.WebGLRenderer({
-    canvas: canvas
-})
-renderer.setSize(sizes.width, sizes.height)
-renderer.render(scene, camera)
+  canvas: document.querySelector(".webgl"),
+});
+renderer.setSize(width, height);
+renderer.render(scene, camera);
