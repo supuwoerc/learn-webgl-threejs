@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { TextGeometry } from "three/addons/geometries/TextGeometry.js";
+import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
 const sizes = {
   width: 800,
   height: 600,
@@ -7,11 +7,15 @@ const sizes = {
 const { width, height } = sizes;
 const scene = new THREE.Scene();
 // 创建文字
-const geometry = new TextGeometry("聿", {
+const geometry = new TextGeometry("HELLO", {
   size: 80,
 });
-const text = new THREE.Text(geometry, material);
-scene.add(text);
+const materials = new THREE.MeshPhongMaterial({
+  color: 0xffffff,
+  flatShading: true,
+});
+const mesh = new THREE.Mesh(geometry, materials);
+scene.add(mesh);
 // 创建照相机
 const camera = new THREE.PerspectiveCamera(75, width / height);
 camera.position.z = 20;
