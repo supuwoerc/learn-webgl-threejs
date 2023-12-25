@@ -1,5 +1,4 @@
 import * as THREE from "three";
-console.log(1);
 const sizes = {
   width: 800,
   height: 600,
