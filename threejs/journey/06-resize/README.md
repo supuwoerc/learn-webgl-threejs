@@ -13,14 +13,14 @@ window.addEventListener("resize", () => {
 ```
 
 
-```javaceript
+```javascript
 // 设置设备的像素比到渲染器,避免HiDPI设备上绘图模糊
 renderer.setPixelRatio(window.devicePixelRatio);
 // 避免过高的像素比导致渲染卡顿,添加限制
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 // 添加resize监听
 window.addEventListener("resize", () => {
-  // 避免双屏移动窗口
+  // 避免双屏移动窗口,像素比不同
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 });
 ```

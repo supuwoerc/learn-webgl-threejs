@@ -41,7 +41,7 @@ window.addEventListener("resize", () => {
   camera.aspect = sizes.width / height;
   camera.updateProjectionMatrix();
   renderer.setSize(sizes.width, sizes.height);
-  // 避免双屏移动窗口
+  // 避免双屏移动窗口,像素比不同
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 });
 // 监听双击事件设置全屏幕
