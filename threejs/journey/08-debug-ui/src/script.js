@@ -34,7 +34,7 @@ const debugObject = {
   spin: () => {
     gsap.to(mesh.rotation, {
       duration: 2,
-      y: "+=360",
+      y: mesh.rotation.y + Math.PI * 2,
     });
   },
 };
