@@ -45,14 +45,15 @@ const colorTexture = textureLoader.load("/textures/door/color.jpg");
 // colorTexture.repeat.x = 2;
 // colorTexture.repeat.y = 3;
 // 设置纹理在x和y方向上的repeat --- Wrapping
-colorTexture.repeat.set(2, 3);
+// colorTexture.repeat.set(2, 3);
 // 设置纹理如何重复（三种方式）
-colorTexture.wrapS = THREE.RepeatWrapping;
-colorTexture.wrapT = THREE.RepeatWrapping;
+// colorTexture.wrapS = THREE.RepeatWrapping;
+// colorTexture.wrapT = THREE.RepeatWrapping;
 //设置纹理的偏移量
-colorTexture.offset.set(0.2, 0.2);
+// colorTexture.offset.set(0.2, 0.2);
 // 设置纹理的旋转
-colorTexture.rotation = Math.PI * 0.25;
+// colorTexture.rotation = Math.PI * 0.25;
+// colorTexture.center.set(0.5, 0.5); // tranformorigin
 // 加载多个纹理
 // const alphaTexture = textureLoader.load("/textures/door/alpha.jpg");
 // const heightTexture = textureLoader.load("/textures/door/height.jpg");
